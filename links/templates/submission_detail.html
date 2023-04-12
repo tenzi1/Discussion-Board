@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+
+{% block title%}
+    Submission Detail
+{% endblock title%}
+
+{% block content %}
+    <h1>Submission Detail</h1>
+    <div class="container">
+        <div>
+        <h3> <a href="{{ object.url }}" target="_blank">{{ object.title }}</a></h3>
+    <p>submitted by: <b>{{ object.submitted_by.username }}</b></p>
+     <p>submitted on: <b>{{ object.submitted_on }}</b></p> 
+    
+            </div>
+
+            <div>
+                <b>New Comments</b>
+                <form action="{% url 'new-comment' %}?link_pk={{ object.pk}}" method="post" novalidate>
+                    {% csrf_token %}
+                    {{ comment_form.as_p}}
+                    <input type="submit" value="Comment">
+                </form>
+            </div>
+            <div>
+                <b>Comments</b>
+                <ul>
+                    {% for comment in comments %}
+                        <li>{{ comment.body }} (<a href="{% url 'new-comment-reply' %}?link_pk={{object.pk}}&parent_comment_pk={{comment.pk}}">Reply</a> )
+                    
+                        {% if comment.comment_set.exists %}
+                        <ul>
+                            {% for reply in comment.comment_set.all %}
+                            <li>{{ reply.body}}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        </li>
+                        {% endfor %}
+                </ul>
+            </div>
+    </div>
+
+    
+{% endblock %}

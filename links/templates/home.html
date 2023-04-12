@@ -1,0 +1,20 @@
+{% extends '_base.html' %}
+{% block content %}
+<h1>Welcome to Discuss</h1>
+<h2>Submissions</h2>
+<ul>
+    {% for submission in submissions %}
+    <li>
+        <a href="{{submission.url}}" target="_blank">{{submission.title}}</a>
+        <i><a href="{% url 'submission-detail' pk=submission.pk %}">Comments</a></i>
+        {% if request.user in submission.upvotes.all %}
+        <button class="btn btn-info">Upvoted</button> 
+         <button class="btn btn-danger"> <a class="text-white" href="{% url 'remove-vote' link_pk=submission.pk%}"> Remove Vote</a></button>
+        ({{submission.upvotes.count }}) 
+        {% else %}
+        <button class="btn btn-info"> <a href="{% url 'upvote' link_pk=submission.pk%}">Upvote</a></button>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
